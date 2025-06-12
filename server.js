@@ -6,7 +6,7 @@ const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch
 const app = express();
 const PORT = process.env.PORT || 10000;
 
-// Ruta para servir el HTML con la API Key
+// Ruta principal que reemplaza la API key en el index.html
 app.get('/', (req, res) => {
   const key = process.env.GOOGLE_MAPS_API_KEY;
   const html = fs.readFileSync(path.join(__dirname, 'public/index.html'), 'utf8')
@@ -14,17 +14,19 @@ app.get('/', (req, res) => {
   res.send(html);
 });
 
-// Servir archivos estáticos
+// Servir archivos estáticos (script.js, etc.)
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Ruta para obtener Starbucks y locales en renta
+// Ruta API para obtener lugares y franquicias existentes
 app.get('/api/places', async (req, res) => {
-  const { lat, lng } = req.query;
+  const { lat, lng, franchise } = req.query;
   const googleKey = process.env.GOOGLE_MAPS_API_KEY;
   const baseUrl = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
 
+  const franchiseName = franchise || "Starbucks";
+
   try {
-    const existing = await fetch(`${baseUrl}?location=${lat},${lng}&radius=3000&type=cafe&keyword=Starbucks&key=${googleKey}`)
+    const existing = await fetch(`${baseUrl}?location=${lat},${lng}&radius=3000&type=cafe&keyword=${franchiseName}&key=${googleKey}`)
       .then(r => r.json());
 
     const rental = await fetch(`${baseUrl}?location=${lat},${lng}&radius=3000&keyword=retail for lease&key=${googleKey}`)
@@ -45,11 +47,12 @@ app.get('/api/places', async (req, res) => {
       }))
     });
   } catch (err) {
-    console.error(err);
+    console.error("Error al obtener datos de Google Places:", err);
     res.status(500).send("Error fetching data from Google Places");
   }
 });
 
+// Iniciar el servidor
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
