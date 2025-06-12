@@ -1,12 +1,15 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
-const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 
 const app = express();
 const PORT = process.env.PORT || 10000;
 
-// Ruta principal que inyecta la API key
+// Verifica si la API key se está leyendo correctamente
+console.log("API KEY EN RUNTIME:", process.env.GOOGLE_MAPS_API_KEY);
+
+// Ruta principal: sirve index.html con la API Key insertada
 app.get('/*', (req, res, next) => {
   if (req.url.startsWith('/api/') || req.url.includes('.')) return next();
 
@@ -16,10 +19,10 @@ app.get('/*', (req, res, next) => {
   res.send(html);
 });
 
-// Archivos estáticos
+// Sirve archivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
 
-// API de lugares y franquicias
+// API para lugares y franquicia
 app.get('/api/places', async (req, res) => {
   const { lat, lng, franchise } = req.query;
   const googleKey = process.env.GOOGLE_MAPS_API_KEY;
