@@ -1,24 +1,22 @@
-const center = { lat: 28.5383, lng: -81.3792 }; // Orlando
+const center = { lat: 25.7617, lng: -80.1918 }; // Miami
 let map;
 
 async function initMap() {
-  console.log("✅ initMap() fue llamado");
-
   map = new google.maps.Map(document.getElementById("map"), {
     center,
     zoom: 13,
   });
+  loadFranchiseData();
+}
 
+async function loadFranchiseData() {
   const franchise = document.getElementById("franchise")?.value || "Starbucks";
   console.log("🔍 Buscando lugares para:", franchise);
 
   try {
     const url = `/api/places?lat=${center.lat}&lng=${center.lng}&franchise=${franchise}`;
-    console.log("🌐 Llamando a:", url);
     const res = await fetch(url);
     const data = await res.json();
-
-    console.log("📦 Respuesta del backend:", data);
 
     if (!data.existing || !data.rental) {
       alert("⚠️ No se recibieron datos válidos");
@@ -39,7 +37,7 @@ async function initMap() {
         google.maps.geometry.spherical.computeDistanceBetween(
           new google.maps.LatLng(e.lat, e.lng),
           new google.maps.LatLng(p.lat, p.lng)
-        ) < 1000
+        ) < 500
       );
       if (!isTooClose) {
         new google.maps.Marker({
@@ -52,7 +50,13 @@ async function initMap() {
     });
 
   } catch (err) {
-    console.error("❌ ERROR al llamar al backend:", err);
+    console.error("❌ Error al llamar al backend:", err);
     alert("Error al conectar con el backend.");
   }
 }
+
+window.initMap = initMap;
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("franchise").addEventListener("change", loadFranchiseData);
+});

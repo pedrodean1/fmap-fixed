@@ -4,28 +4,32 @@
   <meta charset="UTF-8">
   <title>FranchMap</title>
   <style>
-    html, body { margin: 0; padding: 0; height: 100%; }
-    #map { height: 100%; width: 100%; }
+    html, body { margin: 0; padding: 0; height: 100%; font-family: sans-serif; }
+    #map { height: 90%; width: 100%; }
     #panel {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      background: white;
       padding: 10px;
-      z-index: 5;
-      border-radius: 6px;
-      box-shadow: 0 0 6px rgba(0,0,0,0.3);
+      background: #f9f9f9;
     }
   </style>
 </head>
 <body>
   <div id="panel">
-    <label>Franquicia:</label>
-    <select id="franchise" onchange="initMap()">
-      <option value="Starbucks">Starbucks</option>
-      <option value="Subway">Subway</option>
-      <option value="Dunkin">Dunkin</option>
-    </select>
+    <h1>FranchMap</h1>
+    <label>Franquicia:
+      <select id="franchise">
+        <option value="Starbucks">Starbucks</option>
+        <option value="Subway">Subway</option>
+        <option value="Dunkin">Dunkin</option>
+        <option value="Chipotle">Chipotle</option>
+        <option value="7-Eleven">7-Eleven</option>
+        <option value="Pizza Hut">Pizza Hut</option>
+      </select>
+    </label>
+    <div id="requisitos">
+      <p><strong>Distancia mínima:</strong> 0.5 km</p>
+      <p><strong>Tamaño mínimo del local:</strong> 80 m²</p>
+      <p><strong>Demografía mínima:</strong> 10000 hab. en 3 km</p>
+    </div>
   </div>
   <div id="map"></div>
   <script src="script.js"></script>
