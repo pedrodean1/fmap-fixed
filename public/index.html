@@ -1,12 +1,43 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>FranchMap - Demo Starbucks Orlando</title>
+  <title>FranchMap - Demo Franquicias</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="initial-scale=1.0, width=device-width" />
   <script src="https://maps.googleapis.com/maps/api/js?key=API_KEY_PLACEHOLDER&libraries=geometry"></script>
+  <style>
+    #controls {
+      position: absolute;
+      z-index: 999;
+      background: white;
+      padding: 10px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      top: 10px;
+      left: 10px;
+      font-family: sans-serif;
+    }
+  </style>
 </head>
 <body>
+  <div id="controls">
+    <label for="city">Ciudad:</label>
+    <select id="city">
+      <option value="Orlando">Orlando</option>
+      <option value="Miami">Miami</option>
+      <option value="New York">New York</option>
+    </select>
+
+    <label for="franchise">Franquicia:</label>
+    <select id="franchise">
+      <option value="Starbucks">Starbucks</option>
+      <option value="Subway">Subway</option>
+      <option value="Dunkin">Dunkin</option>
+    </select>
+
+    <button onclick="init()">Buscar</button>
+  </div>
+
   <div id="map" style="height:100vh;width:100%"></div>
   <script src="script.js"></script>
 </body>

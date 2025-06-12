@@ -6,7 +6,7 @@ const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch
 const app = express();
 const PORT = process.env.PORT || 10000;
 
-// Ruta principal que reemplaza la API key en el index.html
+// ✅ Esta ruta personalizada debe ir ANTES del static
 app.get('/', (req, res) => {
   const key = process.env.GOOGLE_MAPS_API_KEY;
   const html = fs.readFileSync(path.join(__dirname, 'public/index.html'), 'utf8')
@@ -14,10 +14,10 @@ app.get('/', (req, res) => {
   res.send(html);
 });
 
-// Servir archivos estáticos (script.js, etc.)
+// ❗ Esto debe estar DESPUÉS
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Ruta API para obtener lugares y franquicias existentes
+// Ruta API para lugares y franquicia
 app.get('/api/places', async (req, res) => {
   const { lat, lng, franchise } = req.query;
   const googleKey = process.env.GOOGLE_MAPS_API_KEY;
@@ -52,7 +52,6 @@ app.get('/api/places', async (req, res) => {
   }
 });
 
-// Iniciar el servidor
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`✅ Server running on port ${PORT}`);
 });
