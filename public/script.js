@@ -1,12 +1,10 @@
 const locations = {
-  "Orlando": { lat: 28.5383, lng: -81.3792 },
-  "Miami": { lat: 25.7617, lng: -80.1918 },
-  "New York": { lat: 40.7128, lng: -74.0060 }
+  "Orlando": { lat: 28.5383, lng: -81.3792 }
 };
 
 async function init() {
   const franchise = document.getElementById('franchise').value || 'Starbucks';
-  const center = locations["Orlando"]; // ciudad fija para demo
+  const center = locations["Orlando"];
 
   const map = new google.maps.Map(document.getElementById('map'), {
     center,
@@ -38,6 +36,6 @@ async function init() {
       }
     });
   } catch (error) {
-    console.error("Error al cargar lugares desde /api/places:", error);
+    console.error("Error cargando lugares desde /api/places:", error);
   }
 }

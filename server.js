@@ -6,23 +6,20 @@ const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fet
 const app = express();
 const PORT = process.env.PORT || 10000;
 
-// Verifica si la API key se está leyendo correctamente
 console.log("API KEY EN RUNTIME:", process.env.GOOGLE_MAPS_API_KEY);
 
-// Ruta principal: sirve index.html con la API Key insertada
+// Ruta principal
 app.get('/*', (req, res, next) => {
   if (req.url.startsWith('/api/') || req.url.includes('.')) return next();
-
   const key = process.env.GOOGLE_MAPS_API_KEY;
   const html = fs.readFileSync(path.join(__dirname, 'public/index.html'), 'utf8')
     .replace('API_KEY_PLACEHOLDER', key);
   res.send(html);
 });
 
-// Sirve archivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
 
-// API para lugares y franquicia
+// API para ubicaciones
 app.get('/api/places', async (req, res) => {
   const { lat, lng, franchise } = req.query;
   const googleKey = process.env.GOOGLE_MAPS_API_KEY;
