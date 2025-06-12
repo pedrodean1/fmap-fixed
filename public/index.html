@@ -1,44 +1,32 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-  <title>FranchMap - Demo Franquicias</title>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-  <script src="https://maps.googleapis.com/maps/api/js?key=API_KEY_PLACEHOLDER&libraries=geometry"></script>
+  <meta charset="UTF-8">
+  <title>FranchMap</title>
   <style>
-    #controls {
-      position: absolute;
-      z-index: 999;
-      background: white;
-      padding: 10px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.3);
-      top: 10px;
-      left: 10px;
-      font-family: sans-serif;
-    }
+    body { font-family: sans-serif; padding: 20px; }
+    #map { height: 500px; margin-top: 10px; width: 100%; }
+    #requisitos { margin-top: 10px; background: #f9f9f9; padding: 10px; border-radius: 5px; }
   </style>
 </head>
 <body>
-  <div id="controls">
-    <label for="city">Ciudad:</label>
-    <select id="city">
-      <option value="Orlando">Orlando</option>
-      <option value="Miami">Miami</option>
-      <option value="New York">New York</option>
-    </select>
-
-    <label for="franchise">Franquicia:</label>
-    <select id="franchise">
+  <h1>FranchMap</h1>
+  <form>
+    <label>Franquicia:</label>
+    <select id="franchise" required>
+      <option value="">Selecciona una franquicia</option>
       <option value="Starbucks">Starbucks</option>
       <option value="Subway">Subway</option>
       <option value="Dunkin">Dunkin</option>
     </select>
-
-    <button onclick="init()">Buscar</button>
+  </form>
+  <div id="requisitos">
+    <p><strong>Distancia mínima:</strong> <span id="distancia">1</span> km</p>
+    <p><strong>Tamaño mínimo del local:</strong> <span id="tamano">80</span> m²</p>
+    <p><strong>Demografía mínima:</strong> <span id="demografia">5000</span> hab. en 3 km</p>
   </div>
-
-  <div id="map" style="height:100vh;width:100%"></div>
+  <div id="map"></div>
   <script src="script.js"></script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=API_KEY_PLACEHOLDER&libraries=geometry&callback=init"></script>
 </body>
 </html>

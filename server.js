@@ -6,23 +6,24 @@ const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch
 const app = express();
 const PORT = process.env.PORT || 10000;
 
-// ✅ Esta ruta personalizada debe ir ANTES del static
-app.get('/', (req, res) => {
+// Ruta principal que inyecta la API key
+app.get('/*', (req, res, next) => {
+  if (req.url.startsWith('/api/') || req.url.includes('.')) return next();
+
   const key = process.env.GOOGLE_MAPS_API_KEY;
   const html = fs.readFileSync(path.join(__dirname, 'public/index.html'), 'utf8')
     .replace('API_KEY_PLACEHOLDER', key);
   res.send(html);
 });
 
-// ❗ Esto debe estar DESPUÉS
+// Archivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Ruta API para lugares y franquicia
+// API de lugares y franquicias
 app.get('/api/places', async (req, res) => {
   const { lat, lng, franchise } = req.query;
   const googleKey = process.env.GOOGLE_MAPS_API_KEY;
   const baseUrl = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
-
   const franchiseName = franchise || "Starbucks";
 
   try {

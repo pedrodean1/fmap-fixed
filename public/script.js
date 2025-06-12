@@ -4,14 +4,12 @@ const locations = {
   "New York": { lat: 40.7128, lng: -74.0060 }
 };
 
-let map;
-
 async function init() {
-  const city = document.getElementById('city').value;
-  const franchise = document.getElementById('franchise').value;
-  const center = locations[city];
+  const franchise = document.getElementById('franchise').value || 'Starbucks';
+  const city = 'Orlando';
 
-  map = new google.maps.Map(document.getElementById('map'), {
+  const center = locations[city];
+  const map = new google.maps.Map(document.getElementById('map'), {
     center,
     zoom: 13,
   });
@@ -41,4 +39,7 @@ async function init() {
   });
 }
 
-window.onload = init;
+window.onload = () => {
+  document.getElementById('franchise').addEventListener('change', init);
+  init();
+};
