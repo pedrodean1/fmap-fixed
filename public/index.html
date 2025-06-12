@@ -4,32 +4,32 @@
   <meta charset="UTF-8">
   <title>FranchMap</title>
   <style>
-    body { font-family: sans-serif; padding: 20px; margin: 0; }
-    #map { height: 90vh; width: 100%; }
-    #controls {
-      padding: 10px;
-      background: #fff;
+    html, body { margin: 0; padding: 0; height: 100%; }
+    #map { height: 100%; width: 100%; }
+    #panel {
       position: absolute;
       top: 10px;
       left: 10px;
-      z-index: 999;
-      box-shadow: 0 0 5px rgba(0,0,0,0.3);
+      background: white;
+      padding: 10px;
+      z-index: 5;
       border-radius: 8px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.3);
     }
   </style>
 </head>
 <body>
-  <div id="controls">
-    <label for="franchise">Franquicia:</label>
-    <select id="franchise">
+  <div id="panel">
+    <label>Franquicia:</label>
+    <select id="franchise" onchange="init()">
       <option value="Starbucks">Starbucks</option>
       <option value="Subway">Subway</option>
       <option value="Dunkin">Dunkin</option>
     </select>
-    <button onclick="init()">Buscar</button>
   </div>
   <div id="map"></div>
   <script src="script.js"></script>
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=API_KEY_PLACEHOLDER&libraries=geometry&callback=init"></script>
 </body>
 </html>
+

@@ -6,53 +6,46 @@ const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fet
 const app = express();
 const PORT = process.env.PORT || 10000;
 
-console.log("API KEY EN RUNTIME:", process.env.GOOGLE_MAPS_API_KEY);
+app.use(express.static(path.join(__dirname, 'public')));
 
-// Ruta principal
-app.get('/*', (req, res, next) => {
-  if (req.url.startsWith('/api/') || req.url.includes('.')) return next();
-  const key = process.env.GOOGLE_MAPS_API_KEY;
+app.get('/', (req, res) => {
+  const key = process.env.GOOGLE_MAPS_API_KEY || '';
   const html = fs.readFileSync(path.join(__dirname, 'public/index.html'), 'utf8')
     .replace('API_KEY_PLACEHOLDER', key);
   res.send(html);
 });
 
-app.use(express.static(path.join(__dirname, 'public')));
-
-// API para ubicaciones
 app.get('/api/places', async (req, res) => {
   const { lat, lng, franchise } = req.query;
-  const googleKey = process.env.GOOGLE_MAPS_API_KEY;
-  const baseUrl = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
-  const franchiseName = franchise || "Starbucks";
+  const apiKey = process.env.GOOGLE_MAPS_API_KEY;
+  const endpoint = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
 
   try {
-    const existing = await fetch(`${baseUrl}?location=${lat},${lng}&radius=3000&type=cafe&keyword=${franchiseName}&key=${googleKey}`)
-      .then(r => r.json());
+    const [existingRaw, rentalRaw] = await Promise.all([
+      fetch(`${endpoint}?location=${lat},${lng}&radius=3000&type=cafe&keyword=${franchise}&key=${apiKey}`).then(r => r.json()),
+      fetch(`${endpoint}?location=${lat},${lng}&radius=3000&keyword=retail for lease&key=${apiKey}`).then(r => r.json())
+    ]);
 
-    const rental = await fetch(`${baseUrl}?location=${lat},${lng}&radius=3000&keyword=retail for lease&key=${googleKey}`)
-      .then(r => r.json());
+    const existing = (existingRaw.results || []).map(p => ({
+      name: p.name,
+      lat: p.geometry.location.lat,
+      lng: p.geometry.location.lng
+    }));
 
-    res.json({
-      existing: existing.results.map(p => ({
-        name: p.name,
-        lat: p.geometry.location.lat,
-        lng: p.geometry.location.lng,
-        address: p.vicinity
-      })),
-      rental: rental.results.map(p => ({
-        name: p.name,
-        lat: p.geometry.location.lat,
-        lng: p.geometry.location.lng,
-        address: p.vicinity
-      }))
-    });
-  } catch (err) {
-    console.error("Error al obtener datos de Google Places:", err);
-    res.status(500).send("Error fetching data from Google Places");
+    const rental = (rentalRaw.results || []).map(p => ({
+      name: p.name,
+      lat: p.geometry.location.lat,
+      lng: p.geometry.location.lng
+    }));
+
+    res.json({ existing, rental });
+
+  } catch (e) {
+    console.error("Error en /api/places", e);
+    res.status(500).send({ error: "Error fetching places" });
   }
 });
 
 app.listen(PORT, () => {
-  console.log(`✅ Server running on port ${PORT}`);
+  console.log(`✅ Backend corriendo en el puerto ${PORT}`);
 });
