@@ -6,40 +6,38 @@ const locations = {
 
 async function init() {
   const franchise = document.getElementById('franchise').value || 'Starbucks';
-  const city = 'Orlando';
+  const center = locations["Orlando"]; // ciudad fija para demo
 
-  const center = locations[city];
   const map = new google.maps.Map(document.getElementById('map'), {
     center,
     zoom: 13,
   });
 
-  const resp = await fetch(`/api/places?lat=${center.lat}&lng=${center.lng}&franchise=${franchise}`);
-  const { existing, rental } = await resp.json();
+  try {
+    const resp = await fetch(`/api/places?lat=${center.lat}&lng=${center.lng}&franchise=${franchise}`);
+    const { existing, rental } = await resp.json();
 
-  const mkExisting = existing.map(p => ({
-    ...p,
-    marker: new google.maps.Marker({ position: p, map, icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png' })
-  }));
+    const mkExisting = existing.map(p => ({
+      ...p,
+      marker: new google.maps.Marker({ position: p, map, icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png' })
+    }));
 
-  rental.forEach(r => {
-    const tooClose = mkExisting.some(e =>
-      google.maps.geometry.spherical.computeDistanceBetween(
-        new google.maps.LatLng(r.lat, r.lng),
-        new google.maps.LatLng(e.lat, e.lng)
-      ) < 1000
-    );
-    if (!tooClose) {
-      new google.maps.Marker({
-        position: r,
-        map,
-        icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
-      });
-    }
-  });
+    rental.forEach(r => {
+      const tooClose = mkExisting.some(e =>
+        google.maps.geometry.spherical.computeDistanceBetween(
+          new google.maps.LatLng(r.lat, r.lng),
+          new google.maps.LatLng(e.lat, e.lng)
+        ) < 1000
+      );
+      if (!tooClose) {
+        new google.maps.Marker({
+          position: r,
+          map,
+          icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
+        });
+      }
+    });
+  } catch (error) {
+    console.error("Error al cargar lugares desde /api/places:", error);
+  }
 }
-
-window.onload = () => {
-  document.getElementById('franchise').addEventListener('change', init);
-  init();
-};
