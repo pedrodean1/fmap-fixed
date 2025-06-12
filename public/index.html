@@ -1,30 +1,13 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>FranchMap</title>
-  <style>
-    body { font-family: sans-serif; padding: 20px; }
-    #map { height: 500px; margin-top: 10px; width: 100%; }
-    #requisitos { margin-top: 10px; background: #f9f9f9; padding: 10px; border-radius: 5px; }
-  </style>
+  <title>FranchMap - Demo Starbucks Orlando</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+  <script src="https://maps.googleapis.com/maps/api/js?key=API_KEY_PLACEHOLDER&libraries=geometry"></script>
 </head>
 <body>
-  <h1>FranchMap</h1>
-  <form>
-    <label>Franquicia:</label>
-    <select id="franchise" required>
-      <option value="">Selecciona una franquicia</option>
-      <option value="Starbucks">Starbucks</option>
-    </select>
-  </form>
-  <div id="requisitos">
-    <p><strong>Distancia mínima:</strong> <span id="distancia">—</span> km</p>
-    <p><strong>Tamaño mínimo del local:</strong> <span id="tamano">—</span> m²</p>
-    <p><strong>Demografía mínima:</strong> <span id="demografia">—</span> hab. en 3 km</p>
-  </div>
-  <div id="map"></div>
+  <div id="map" style="height:100vh;width:100%"></div>
   <script src="script.js"></script>
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4fMqxrdomOlIRXE_cZdszjKnYC_9FuN8&callback=initMap"></script>
 </body>
 </html>
